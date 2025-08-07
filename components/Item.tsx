@@ -6,9 +6,10 @@ import { useUpdateItem, useDeleteItem } from '../hooks/useItems';
 
 interface Props {
     item: Item;
+    onDelete?: () => void;
 }
 
-const ItemComponent: React.FC<Props> = ({ item }) => {
+const ItemComponent: React.FC<Props> = ({ item, onDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(item.name);
     const [description, setDescription] = useState(item.description);
@@ -24,7 +25,11 @@ const ItemComponent: React.FC<Props> = ({ item }) => {
     };
 
     const handleDelete = () => {
-        deleteItem(item.id);
+        if (onDelete) {
+            onDelete();
+        } else {
+            deleteItem(item.id);
+        }
     };
 
     return (
@@ -58,7 +63,7 @@ const ItemComponent: React.FC<Props> = ({ item }) => {
                     </div>
                     {updateError && (
                         <p className="text-red-500">
-                            Error: {(updateError as Error).message}
+                            Error: {updateError.message}
                         </p>
                     )}
                 </div>
@@ -86,7 +91,7 @@ const ItemComponent: React.FC<Props> = ({ item }) => {
                     </button>
                     {deleteError && (
                         <p className="text-red-500">
-                            Error: {(deleteError as Error).message}
+                            Error: {deleteError.message}
                         </p>
                     )}
                 </div>
